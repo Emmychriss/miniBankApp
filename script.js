@@ -6,7 +6,7 @@
 const account1 = {
   owner: 'Nduka Emmanuel',
   movements: [5200, 270, -490, -1000, 650, 830, -70, 1800],
-  interestRate: 1.6, // %
+  interestRate: 1.8, // %
   pin: 1111,
 };
 
@@ -14,28 +14,28 @@ const account2 = {
   owner: 'Jerimiah Samuel',
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
-  pin: 1111,
+  pin: 2222,
 };
 
 const account3 = {
   owner: 'Pelumi James',
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
-  pin: 2222,
+  pin: 3333,
 };
 
 const account4 = {
   owner: 'Steven Thomas Williams',
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
-  pin: 3333,
+  pin: 4444,
 };
 
 const account5 = {
   owner: 'Sarah opeyemi',
   movements: [430, 1000, 700, 50, 90],
   interestRate: 1,
-  pin: 4444,
+  pin: 5555,
 };
 
 const accounts = [account1, account2, account3, account4, account5];
@@ -77,10 +77,16 @@ const createUserInitials = function (accts) {
 };
 createUserInitials(accounts);
 
-const displayTransactions = function (movements) {
+const displayTransactions = function (movements, sort = false) {
   containerMovements.innerHTML = '';
 
-  movements.forEach(function (element, index) {
+  const sortMovs = sort
+    ? movements.slice().sort((a, b) => {
+        return a - b;
+      })
+    : movements;
+
+  sortMovs.forEach(function (element, index) {
     const actionType = element > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -166,11 +172,15 @@ btnLogin.addEventListener('click', function (e) {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
+
   const transferAmount = parseInt(inputTransferAmount.value);
   const receiver = accounts.find(acc => acc.username === inputTransferTo.value);
 
   console.log(transferAmount);
   console.log(receiver);
+
+  inputTransferAmount.value = '';
+  inputTransferTo.value = '';
 
   if (
     transferAmount > 0 &&
@@ -185,3 +195,30 @@ btnTransfer.addEventListener('click', function (e) {
     updateUI(currentAccount);
   }
 });
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  if (
+    currentAccount?.username === Number(inputCloseUsername.value) &&
+    currentAccount?.pin === Number(inputClosePin.value)
+  ) {
+    const index = accounts.findIndex(
+      acc => acc.username === currentAccount.username
+    );
+    console.log(index);
+    accounts.splice(index, 1);
+  }
+});
+
+let sortState = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayTransactions(currentAccount.movements, !sortState);
+  sortState = !sortState;
+});
+
+
+
+
+
