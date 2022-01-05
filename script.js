@@ -158,7 +158,7 @@ const displayBalance = function (account) {
   labelBalance.textContent = `${account.balance.toFixed(2)}💲`;
 };
 
-const updateUI = function (acc) { 
+const updateUI = function (acc) {
   // display balance
   displayBalance(acc);
 
@@ -242,7 +242,7 @@ btnClose.addEventListener('click', function (e) {
   e.preventDefault();
 
   if (
-    currentAccount?.username === Number(inputCloseUsername.value) &&
+    currentAccount?.username === inputCloseUsername.value &&
     currentAccount?.pin === Number(inputClosePin.value)
   ) {
     const index = accounts.findIndex(
@@ -250,6 +250,8 @@ btnClose.addEventListener('click', function (e) {
     );
     console.log(index);
     accounts.splice(index, 1);
+
+    containerApp.style.opacity = 0;
   }
 });
 
@@ -259,5 +261,3 @@ btnSort.addEventListener('click', function (e) {
   displayTransactions(currentAccount.movements, !sortState);
   sortState = !sortState;
 });
-
-
