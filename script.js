@@ -120,7 +120,7 @@ const displayTransactions = function (movements, sort = false) {
           <div class="movements__type movements__type--${actionType}">${
       index + 1
     } ${actionType}</div>
-          <div class="movements__value">${element}💲</div>
+          <div class="movements__value">${element.toFixed(2)}💲</div>
           </div>
         </div>
     `;
@@ -133,12 +133,12 @@ const displaySummary = function (account) {
   const incoming = account.movements
     .filter(element => element > 0)
     .reduce((accumulator, element, index, arr) => accumulator + element, 0);
-  labelSumIn.textContent = `${incoming}💲`;
+  labelSumIn.textContent = `${incoming.toFixed(2)}💲`;
 
   const outgoing = account.movements
     .filter(element => element < 0)
     .reduce((accumulator, element) => accumulator + element, 0);
-  labelSumOut.textContent = `${Math.abs(outgoing)}💲`;
+  labelSumOut.textContent = `${Math.abs(outgoing).toFixed(2)}💲`;
 
   const interest = account.movements
     .filter(element => element > 0)
@@ -148,16 +148,17 @@ const displaySummary = function (account) {
       return element >= 1;
     })
     .reduce((accumulator, element) => accumulator + element, 0);
-  labelSumInterest.textContent = `${interest}💲`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}💲`;
 };
 
 const displayBalance = function (account) {
   account.balance = account.movements.reduce(function (accumulator, element) {
     return accumulator + element;
   }, 0);
-  labelBalance.textContent = `${account.balance}💲`;
+  labelBalance.textContent = `${account.balance.toFixed(2)}💲`;
 };
-const updateUI = function (acc) {
+
+const updateUI = function (acc) { 
   // display balance
   displayBalance(acc);
 
@@ -224,7 +225,7 @@ btnTransfer.addEventListener('click', function (e) {
 
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // add movement
