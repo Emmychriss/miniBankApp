@@ -184,10 +184,10 @@ const updateUI = function (acc) {
 // Events handler
 let currentAccount;
 
-// FAKE ALWAYS LOGGED IN
-currentAccount = account1;
-updateUI(account1);
-containerApp.style.opacity = 1;
+// // FAKE ALWAYS LOGGED IN
+// currentAccount = account1;
+// updateUI(account1);
+// containerApp.style.opacity = 1;
 
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
