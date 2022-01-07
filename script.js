@@ -17,7 +17,8 @@ const account1 = {
     '2020-05-08T14:11:59.604Z',
     '2020-05-27T17:01:17.194Z',
     '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    // '2022-01-07T11:57:20.420Z',
+    new Date(Date.now()).toISOString(),
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -92,6 +93,7 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+// Displays
 const createUserInitials = function (accts) {
   accts.forEach(function (acc) {
     acc.username = acc.owner
@@ -103,23 +105,33 @@ const createUserInitials = function (accts) {
 };
 createUserInitials(accounts);
 
-const displayTransactions = function (movements, sort = false) {
+const displayTransactions = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
   const sortMovs = sort
-    ? movements.slice().sort((a, b) => {
+    ? acc.movements.slice().sort((a, b) => {
         return a - b;
       })
-    : movements;
+    : acc.movements;
 
   sortMovs.forEach(function (element, index) {
     const actionType = element > 0 ? 'deposit' : 'withdrawal';
+
+    const date = new Date(acc.movementsDates[index]);
+    const displayDates = today =>
+      [
+        `${today.getDate()}`.padStart(2, 0),
+        `${today.getMonth() + 1}`.padStart(2, 0),
+        today.getFullYear(),
+      ].join('/');
+    // displayDates(date);
 
     const html = `
         <div class="movements__row">
           <div class="movements__type movements__type--${actionType}">${
       index + 1
     } ${actionType}</div>
+          <div class="movements__date">${displayDates(date)}</div>
           <div class="movements__value">${element.toFixed(2)}💲</div>
           </div>
         </div>
@@ -163,7 +175,7 @@ const updateUI = function (acc) {
   displayBalance(acc);
 
   // display transaction movements
-  displayTransactions(acc.movements);
+  displayTransactions(acc);
 
   // display summary
   displaySummary(acc);
@@ -171,6 +183,11 @@ const updateUI = function (acc) {
 
 // Events handler
 let currentAccount;
+
+// FAKE ALWAYS LOGGED IN
+currentAccount = account1;
+updateUI(account1);
+containerApp.style.opacity = 1;
 
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
@@ -186,6 +203,23 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 1;
+
+    // current date and time display
+    const today = new Date();
+    // console.log(today)
+    const welcomeDate = function (today) {
+      const dateArr = [
+        `${today.getDate()}`.padStart(2, 0),
+        `${today.getMonth() + 1}`.padStart(2, 0),
+        today.getFullYear(),
+      ];
+      const todayDate = dateArr.join('/');
+      labelDate.textContent =
+        `${todayDate},` +
+        `${today.getHours()}:`.padStart(3 , 0) +
+        `${today.getMinutes()}`.padStart(2, 0);
+    };
+    welcomeDate(today);
 
     // clear input fields
     inputLoginUsername.value = '';
@@ -215,10 +249,15 @@ btnTransfer.addEventListener('click', function (e) {
     receiver &&
     currentAccount.username !== receiver?.username
   ) {
+    // doing the transfer
     currentAccount.movements.push(-transferAmount); // debiting current userm movements  array
     receiver.movements.push(transferAmount); // crediting receiver
 
-    // updating the UI with the current account movements
+    // add transfer date
+    currentAccount.movementsDates.push(new Date().toISOString())
+    receiver.movementsDates.push(new Date().toISOString())
+
+    // updating the UI with the current account movements and movement dates
     updateUI(currentAccount);
   }
 });
@@ -230,6 +269,9 @@ btnLoan.addEventListener('click', function (e) {
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // add movement
     currentAccount.movements.push(amount);
+
+    // add loan date
+    currentAccount.movementsDates.push(new Date().toISOString())
 
     // update the UI
     updateUI(currentAccount);
