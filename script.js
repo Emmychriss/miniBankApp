@@ -21,7 +21,7 @@ const account1 = {
     new Date(Date.now()).toISOString(),
   ],
   currency: 'EUR',
-  locale: 'pt-PT', // de-DE
+  locale: 'en-US',
 };
 
 const account2 = {
@@ -41,7 +41,7 @@ const account2 = {
     '2020-07-26T12:01:20.894Z',
   ],
   currency: 'USD',
-  locale: 'en-US',
+  locale: 'pt-PT',
 };
 
 const account3 = {
@@ -118,8 +118,13 @@ const displayTransactions = function (acc, sort = false) {
     const actionType = element > 0 ? 'deposit' : 'withdrawal';
 
     const date = new Date(acc.movementsDates[index]);
+    // const options = {
+    //   day: "numeric",
+    //   month: "numeric",
+    //   year: "numeric",
+    // }
 
-    const movementDates = function (date) {
+    const movementDates = function (date, locale) {
       const calcDaysPassed = (date1, date2) =>
         Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
 
@@ -130,12 +135,13 @@ const displayTransactions = function (acc, sort = false) {
       if (daysPassed === 1) return 'Yesterday';
       if (daysPassed <= 7) return `${daysPassed} days ago`;
       else {
-        return [
-          `${date.getDate()}`.padStart(2, 0),
-          `${date.getMonth() + 1}`.padStart(2, 0),
-          date.getFullYear(),
-        ].join('/');
-        // displayDates(date);
+        return new Intl.DateTimeFormat(locale).format(date);
+
+        // return [
+        //   `${date.getDate()}`.padStart(2, 0),
+        //   `${date.getMonth() + 1}`.padStart(2, 0),
+        //   date.getFullYear(),
+        // ].join('/');
       }
     };
 
@@ -144,7 +150,7 @@ const displayTransactions = function (acc, sort = false) {
           <div class="movements__type movements__type--${actionType}">${
       index + 1
     } ${actionType}</div>
-          <div class="movements__date">${movementDates(date)}</div>
+          <div class="movements__date">${movementDates(date, acc.locale)}</div>
           <div class="movements__value">${element.toFixed(2)}💲</div>
           </div>
         </div>
@@ -198,9 +204,9 @@ const updateUI = function (acc) {
 let currentAccount;
 
 // // FAKE ALWAYS LOGGED IN
-// currentAccount = account1;
-// updateUI(account1);
-// containerApp.style.opacity = 1;
+currentAccount = account1;
+updateUI(account1);
+containerApp.style.opacity = 1;
 
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
@@ -219,20 +225,35 @@ btnLogin.addEventListener('click', function (e) {
 
     // current date and time display
     const today = new Date();
-    // console.log(today)
-    const welcomeDate = function (today) {
-      const dateArr = [
-        `${today.getDate()}`.padStart(2, 0),
-        `${today.getMonth() + 1}`.padStart(2, 0),
-        today.getFullYear(),
-      ];
-      const todayDate = dateArr.join('/');
-      labelDate.textContent =
-        `${todayDate},` +
-        `${today.getHours()}:`.padStart(3, 0) +
-        `${today.getMinutes()}`.padStart(2, 0);
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      // weekday: 'short',
     };
-    welcomeDate(today);
+    // const locale = navigator.language;
+    // console.log(locale);
+
+    labelDate.textContent = new Intl.DateTimeFormat(
+      currentAccount.locale,
+      options
+    ).format(today);
+
+    // const welcomeDate = function (today) {
+    //   const dateArr = [
+    //     `${today.getDate()}`.padStart(2, 0),
+    //     `${today.getMonth() + 1}`.padStart(2, 0),
+    //     today.getFullYear(),
+    //   ];
+    //   const todayDate = dateArr.join('/');
+    //   labelDate.textContent =
+    //     `${todayDate},` +
+    //     `${today.getHours()}:`.padStart(3, 0) +
+    //     `${today.getMinutes()}`.padStart(2, 0);
+    // };
+    // welcomeDate(today);
 
     // clear input fields
     inputLoginUsername.value = '';
