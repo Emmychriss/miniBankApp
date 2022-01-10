@@ -340,16 +340,18 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // add movement
-    currentAccount.movements.push(amount);
+    setTimeout(function () {
+      // add movement
+      currentAccount.movements.push(amount);
 
-    // add loan date
-    currentAccount.movementsDates.push(new Date().toISOString());
+      // add loan date
+      currentAccount.movementsDates.push(new Date().toISOString());
 
-    // update the UI
-    updateUI(currentAccount);
+      // update the UI
+      updateUI(currentAccount);
 
-    inputLoanAmount.value = '';
+      inputLoanAmount.value = '';
+    }, 3000);
   }
 });
 
@@ -371,7 +373,7 @@ btnClose.addEventListener('click', function (e) {
 });
 
 let sortState = false;
-btnSort.addEventListener('click', function (e) {
+btnSort.addEventListener('click', function (e) { 
   e.preventDefault();
   displayTransactions(currentAccount.movements, !sortState);
   sortState = !sortState;
