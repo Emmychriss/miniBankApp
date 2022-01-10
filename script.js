@@ -20,7 +20,7 @@ const account1 = {
     // '2022-01-07T11:57:20.420Z',
     new Date(Date.now()).toISOString(),
   ],
-  currency: 'EUR',
+  currency: 'USD',
   locale: 'en-US',
 };
 
@@ -40,7 +40,7 @@ const account2 = {
     '2020-06-25T18:49:59.371Z',
     '2020-07-26T12:01:20.894Z',
   ],
-  currency: 'USD',
+  currency: 'EUR',
   locale: 'pt-PT',
 };
 
@@ -105,6 +105,13 @@ const createUserInitials = function (accts) {
 };
 createUserInitials(accounts);
 
+const formatCurrency = (value, locale, currency) => {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(value);
+};
+
 const displayTransactions = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
@@ -145,13 +152,23 @@ const displayTransactions = function (acc, sort = false) {
       }
     };
 
+    // const options = {
+    //   style: 'currency',
+    //   currency: acc.currency,
+    // };
+    // const formattedEle = new Intl.NumberFormat(acc.locale, options).format(
+    //   element
+    // );
+
+    const formattedEle = formatCurrency(element, acc.locale, acc.currency);
+
     const html = `
         <div class="movements__row">
           <div class="movements__type movements__type--${actionType}">${
       index + 1
     } ${actionType}</div>
           <div class="movements__date">${movementDates(date, acc.locale)}</div>
-          <div class="movements__value">${element.toFixed(2)}💲</div>
+          <div class="movements__value">${formattedEle}</div>
           </div>
         </div>
     `;
@@ -164,12 +181,22 @@ const displaySummary = function (account) {
   const incoming = account.movements
     .filter(element => element > 0)
     .reduce((accumulator, element, index, arr) => accumulator + element, 0);
-  labelSumIn.textContent = `${incoming.toFixed(2)}💲`;
+  labelSumIn.textContent = formatCurrency(
+    incoming,
+    account.locale,
+    account.currency
+  );
+  // `${incoming.toFixed(2)}💲`;
 
   const outgoing = account.movements
     .filter(element => element < 0)
     .reduce((accumulator, element) => accumulator + element, 0);
-  labelSumOut.textContent = `${Math.abs(outgoing).toFixed(2)}💲`;
+  labelSumOut.textContent = formatCurrency(
+    Math.abs(outgoing),
+    account.locale,
+    account.currency
+  );
+  // `${Math.abs(outgoing).toFixed(2)}💲`;
 
   const interest = account.movements
     .filter(element => element > 0)
@@ -179,14 +206,26 @@ const displaySummary = function (account) {
       return element >= 1;
     })
     .reduce((accumulator, element) => accumulator + element, 0);
-  labelSumInterest.textContent = `${interest.toFixed(2)}💲`;
+  labelSumInterest.textContent = formatCurrency(
+    interest,
+    account.locale,
+    account.currency
+  );
+  // `${interest.toFixed(2)}💲`;
 };
 
 const displayBalance = function (account) {
+  // console.log(account)
   account.balance = account.movements.reduce(function (accumulator, element) {
     return accumulator + element;
   }, 0);
-  labelBalance.textContent = `${account.balance.toFixed(2)}💲`;
+  labelBalance.textContent = formatCurrency(
+    account.balance,
+    account.locale,
+    account.currency
+  );
+
+  // `${account.balance.toFixed(2)}💲`
 };
 
 const updateUI = function (acc) {
@@ -337,4 +376,3 @@ btnSort.addEventListener('click', function (e) {
   displayTransactions(currentAccount.movements, !sortState);
   sortState = !sortState;
 });
-
