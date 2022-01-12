@@ -246,8 +246,6 @@ const startLogoutTimer = function () {
 
     // In each call, display remaining time in the UI
     labelTimer.textContent = `${min}:${sec}`;
-    // decrease time
-    time--;
 
     // stop timer at 00:00 and logout the user
     if (time === 0) {
@@ -255,17 +253,22 @@ const startLogoutTimer = function () {
       labelWelcome.textContent = `Login to get started`;
       containerApp.style.opacity = 0;
     }
-  }
+
+    // decrease time
+    time--;
+  };
   // set the time to some number of minutes
   let time = 20;
-  tickTime()
+  tickTime();
 
   // call the timer every second
   const timer = setInterval(tickTime, 1000);
+
+  return timer;
 };
 
 // Events handler
-let currentAccount;
+let currentAccount, timer;
 
 // // FAKE ALWAYS LOGGED IN
 // currentAccount = account1;
@@ -324,10 +327,11 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginPin.value = '';
     inputLoginPin.blur();
 
-    // updating the UI with the current account movements
-    startLogoutTimer();
+    // Timers
+    if (timer) clearInterval(timer);
+    timer = startLogoutTimer();
 
-    // update the UI
+    // updating the UI with the current account transaction values
     updateUI(currentAccount);
   }
 });
