@@ -258,7 +258,7 @@ const startLogoutTimer = function () {
     time--;
   };
   // set the time to some number of minutes
-  let time = 20;
+  let time = 120;
   tickTime();
 
   // call the timer every second
@@ -364,6 +364,10 @@ btnTransfer.addEventListener('click', function (e) {
 
     // updating the UI with the current account movements and movement dates
     updateUI(currentAccount);
+
+    // reset the timer
+    clearInterval(timer)
+    timer = startLogoutTimer()
   }
 });
 
@@ -384,6 +388,10 @@ btnLoan.addEventListener('click', function (e) {
 
       inputLoanAmount.value = '';
     }, 3000);
+
+    // reset the timer
+    clearInterval(timer)
+    timer = startLogoutTimer()
   }
 });
 
