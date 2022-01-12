@@ -240,30 +240,37 @@ const updateUI = function (acc) {
 };
 
 const startLogoutTimer = function () {
-  // set the time to 5mins
-  let time = 20;
-
-  // call the timer every second
-  setInterval(function () {
+  const tickTime = function () {
     const min = String(Math.trunc(time / 60)).padStart(2, 0);
     const sec = String(Math.trunc(time % 60)).padStart(2, 0);
 
-    // In each call, diaplay remaining time to the UI
+    // In each call, display remaining time in the UI
     labelTimer.textContent = `${min}:${sec}`;
     // decrease time
     time--;
 
     // stop timer at 00:00 and logout the user
-  }, 1000);
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = `Login to get started`;
+      containerApp.style.opacity = 0;
+    }
+  }
+  // set the time to some number of minutes
+  let time = 20;
+  tickTime()
+
+  // call the timer every second
+  const timer = setInterval(tickTime, 1000);
 };
 
 // Events handler
 let currentAccount;
 
 // // FAKE ALWAYS LOGGED IN
-currentAccount = account1;
-updateUI(account1);
-containerApp.style.opacity = 1;
+// currentAccount = account1;
+// updateUI(account1);
+// containerApp.style.opacity = 1;
 
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
