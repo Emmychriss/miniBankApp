@@ -239,6 +239,24 @@ const updateUI = function (acc) {
   displaySummary(acc);
 };
 
+const startLogoutTimer = function () {
+  // set the time to 5mins
+  let time = 20;
+
+  // call the timer every second
+  setInterval(function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(Math.trunc(time % 60)).padStart(2, 0);
+
+    // In each call, diaplay remaining time to the UI
+    labelTimer.textContent = `${min}:${sec}`;
+    // decrease time
+    time--;
+
+    // stop timer at 00:00 and logout the user
+  }, 1000);
+};
+
 // Events handler
 let currentAccount;
 
@@ -300,6 +318,9 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginPin.blur();
 
     // updating the UI with the current account movements
+    startLogoutTimer();
+
+    // update the UI
     updateUI(currentAccount);
   }
 });
@@ -373,7 +394,7 @@ btnClose.addEventListener('click', function (e) {
 });
 
 let sortState = false;
-btnSort.addEventListener('click', function (e) { 
+btnSort.addEventListener('click', function (e) {
   e.preventDefault();
   displayTransactions(currentAccount.movements, !sortState);
   sortState = !sortState;
