@@ -365,9 +365,14 @@ btnTransfer.addEventListener('click', function (e) {
     // updating the UI with the current account movements and movement dates
     updateUI(currentAccount);
 
+    // confirm for transfer to another account
+    confirm(
+      `${currentAccount.owner.split(' ')[0]}, do you confirm this transfer?`
+    );
+
     // reset the timer
-    clearInterval(timer)
-    timer = startLogoutTimer()
+    clearInterval(timer);
+    timer = startLogoutTimer();
   }
 });
 
@@ -390,8 +395,8 @@ btnLoan.addEventListener('click', function (e) {
     }, 3000);
 
     // reset the timer
-    clearInterval(timer)
-    timer = startLogoutTimer()
+    clearInterval(timer);
+    timer = startLogoutTimer();
   }
 });
 
