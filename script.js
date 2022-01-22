@@ -366,9 +366,12 @@ btnTransfer.addEventListener('click', function (e) {
     updateUI(currentAccount);
 
     // confirm for transfer to another account
-    confirm(
-      `${currentAccount.owner.split(' ')[0]}, do you confirm this transfer?`
-    );
+    setTimeout(function () {
+      confirm(
+        `${currentAccount.owner.split(' ')[0]}, do you confirm this transfer?`
+      ),
+        3000;
+    });
 
     // reset the timer
     clearInterval(timer);
@@ -414,6 +417,7 @@ btnClose.addEventListener('click', function (e) {
     accounts.splice(index, 1);
 
     containerApp.style.opacity = 0;
+    labelWelcome.textContent = `Login to get started`;
   }
 });
 
