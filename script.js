@@ -354,24 +354,45 @@ btnTransfer.addEventListener('click', function (e) {
     receiver &&
     currentAccount.username !== receiver?.username
   ) {
-    // doing the transfer
-    currentAccount.movements.push(-transferAmount); // debiting current userm movements  array
-    receiver.movements.push(transferAmount); // crediting receiver
-
-    // add transfer date
-    currentAccount.movementsDates.push(new Date().toISOString());
-    receiver.movementsDates.push(new Date().toISOString());
-
-    // updating the UI with the current account movements and movement dates
-    updateUI(currentAccount);
-
     // confirm for transfer to another account
-    setTimeout(function () {
+    if (
       confirm(
-        `${currentAccount.owner.split(' ')[0]}, do you confirm this transfer?`
-      ),
-        3000;
-    });
+        `${
+          currentAccount.owner.split(' ')[0]
+        }, do you confirm this transfer to ${receiver.owner.split(' ')[0]}?`
+      )
+    ) {
+      // doing the transfer
+      setTimeout(function () {
+        currentAccount.movements.push(-transferAmount); // debiting current user movements  array
+        receiver.movements.push(transferAmount); // crediting receiver
+
+        // add transfer date
+        currentAccount.movementsDates.push(new Date().toISOString());
+        receiver.movementsDates.push(new Date().toISOString());
+
+        // updating the UI with the current account movements and movement dates
+        updateUI(currentAccount);
+      }, 5000); // transfer only after 5 seconds delay
+    }
+
+    // reset the timer
+    clearInterval(timer);
+    timer = startLogoutTimer();
+  } else if (transferAmount > currentAccount.balance) {
+    alert(`Cannot transfer funds more than your account balance`);
+
+    // reset the timer
+    clearInterval(timer);
+    timer = startLogoutTimer();
+  } else if (transferAmount < 0) {
+    alert(`Cannot transfer funds less than 0`);
+
+    // reset the timer
+    clearInterval(timer);
+    timer = startLogoutTimer();
+  } else if (!receiver) {
+    alert(`Cannot place transfer. Enter a valid user with transfer amount`);
 
     // reset the timer
     clearInterval(timer);
@@ -400,6 +421,8 @@ btnLoan.addEventListener('click', function (e) {
     // reset the timer
     clearInterval(timer);
     timer = startLogoutTimer();
+  } else if (!amount) {
+    alert(`Enter loan amount to proceed`);
   }
 });
 
@@ -410,20 +433,28 @@ btnClose.addEventListener('click', function (e) {
     currentAccount?.username === inputCloseUsername.value &&
     currentAccount?.pin === Number(inputClosePin.value)
   ) {
-    const index = accounts.findIndex(
-      acc => acc.username === currentAccount.username
-    );
-    console.log(index);
-    accounts.splice(index, 1);
+    if (confirm(`Are you sure to close this account?`)) {
+      const index = accounts.findIndex(
+        acc => acc.username === currentAccount.username
+      );
+      console.log(index);
+      accounts.splice(index, 1);
 
-    containerApp.style.opacity = 0;
-    labelWelcome.textContent = `Login to get started`;
+      containerApp.style.opacity = 0;
+      labelWelcome.textContent = `Login to get started`;
+    }
+  } else if (inputCloseUsername.value !== currentAccount.username) {
+    alert(`Account dosen't exist`);
   }
 });
 
 let sortState = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
+  
   displayTransactions(currentAccount.movements, !sortState);
   sortState = !sortState;
 });
+
+// ADDITIONAL APP FEATURES
+// adding trasition effect 5seconds on app page load to container app opacity
