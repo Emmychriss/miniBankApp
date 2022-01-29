@@ -252,13 +252,15 @@ const startLogoutTimer = function () {
       clearInterval(timer);
       labelWelcome.textContent = `Login to get started`;
       containerApp.style.opacity = 0;
+      document.querySelector('.swal-modal').style.visibility = 'hidden'; // hide sweet alert
+      location.reload();
     }
 
     // decrease time
     time--;
   };
   // set the time to some number of minutes
-  let time = 120;
+  let time = 300;
   tickTime();
 
   // call the timer every second
@@ -284,8 +286,8 @@ btnLogin.addEventListener('click', function (e) {
   console.log(currentAccount);
 
   if (currentAccount?.pin === parseInt(inputLoginPin.value)) {
-    swal('Good job!', 'You are now logged in!', 'success');
-    
+    swal('Welcome!', 'You are now logged in!', 'success');
+
     // display UI and welcome message
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
@@ -344,6 +346,12 @@ btnTransfer.addEventListener('click', function (e) {
   const transferAmount = parseInt(inputTransferAmount.value);
   const receiver = accounts.find(acc => acc.username === inputTransferTo.value);
 
+  // formatCurrency(
+  //   transferAmount,
+  //   currentAccount.locale,
+  //   currentAccount.currency
+  // );
+
   console.log(transferAmount);
   console.log(receiver);
 
@@ -357,44 +365,73 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.username !== receiver?.username
   ) {
     // confirm for transfer to another account
-    if (
-      confirm(
-        `${
-          currentAccount.owner.split(' ')[0]
-        }, do you confirm this transfer to ${receiver.owner.split(' ')[0]}?`
-      )
-    ) {
-      // doing the transfer
-      setTimeout(function () {
-        currentAccount.movements.push(-transferAmount); // debiting current user movements  array
-        receiver.movements.push(transferAmount); // crediting receiver
 
-        // add transfer date
-        currentAccount.movementsDates.push(new Date().toISOString());
-        receiver.movementsDates.push(new Date().toISOString());
+    // confirm(
+    //   `${
+    //     currentAccount.owner.split(' ')[0]
+    //   }, do you confirm this transfer to ${receiver.owner.split(' ')[0]}?`
+    // )
 
-        // updating the UI with the current account movements and movement dates
-        updateUI(currentAccount);
-      }, 5000); // transfer only after 5 seconds delay
-    }
+    swal({
+      title: `Hi ${currentAccount.owner.split(' ')[0]}`,
+      text: `Do you confirm this transfer to ${receiver.owner.split(' ')[0]}?`,
+      icon: 'warning',
+      buttons: true,
+      dangerMode: true,
+    }).then(willDelete => {
+      if (willDelete) {
+        swal(
+          `You successfully transfered ${formatCurrency(
+            transferAmount,
+            currentAccount.locale,
+            currentAccount.currency
+          )}  out`,
+          {
+            icon: 'success',
+          }
+        );
 
-    // reset the timer
-    clearInterval(timer);
-    timer = startLogoutTimer();
+        // doing the transfer
+        setTimeout(function () {
+          currentAccount.movements.push(-transferAmount); // debiting current user movements  array
+          receiver.movements.push(transferAmount); // crediting receiver
+
+          // add transfer date
+          currentAccount.movementsDates.push(new Date().toISOString());
+          receiver.movementsDates.push(new Date().toISOString());
+
+          // updating the UI with the current account movements and movement dates
+          updateUI(currentAccount);
+        }, 5000); // transfer only after 5 seconds delay
+
+        // reset the timer
+        clearInterval(timer);
+        timer = startLogoutTimer();
+      } else {
+        swal('Transfer cancelled successfully');
+      }
+    });
   } else if (transferAmount > currentAccount.balance) {
-    alert(`Cannot transfer funds more than your account balance`);
+    // alert(`Cannot transfer funds more than your account balance`);
+    swal('Error!', 'Cannot transfer funds more than A/C balance', 'error');
 
     // reset the timer
     clearInterval(timer);
     timer = startLogoutTimer();
   } else if (transferAmount < 0) {
-    alert(`Cannot transfer funds less than 0`);
+    // alert(`Cannot transfer funds less than 0`);
+    swal('Error!', 'Cannot transfer funds less than 0', 'error');
 
     // reset the timer
     clearInterval(timer);
     timer = startLogoutTimer();
   } else if (!receiver) {
-    alert(`Cannot place transfer. Enter a valid user with transfer amount`);
+    // alert(`Cannot place transfer. Enter a valid user with transfer amount`);
+    swal(
+      'Error!',
+      'Cannot place transfer. Enter a valid user with transfer amount',
+      'error'
+    );
 
     // reset the timer
     clearInterval(timer);
@@ -424,7 +461,8 @@ btnLoan.addEventListener('click', function (e) {
     clearInterval(timer);
     timer = startLogoutTimer();
   } else if (!amount) {
-    alert(`Enter loan amount to proceed`);
+    // alert(`Enter loan amount to proceed`);
+    swal('Error!', 'Enter loan amount to proceed', 'error');
   }
 });
 
@@ -460,3 +498,4 @@ btnSort.addEventListener('click', function (e) {
 
 // ADDITIONAL APP FEATURES
 // adding trasition effect 5seconds on app page load to container app opacity
+// format transfer amount and loan amount to have comma seperators
