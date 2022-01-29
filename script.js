@@ -267,7 +267,7 @@ const startLogoutTimer = function () {
   return timer;
 };
 
-// Events handler
+// Events listeners/ handler
 let currentAccount, timer;
 
 // // FAKE ALWAYS LOGGED IN
@@ -284,6 +284,8 @@ btnLogin.addEventListener('click', function (e) {
   console.log(currentAccount);
 
   if (currentAccount?.pin === parseInt(inputLoginPin.value)) {
+    swal('Good job!', 'You are now logged in!', 'success');
+    
     // display UI and welcome message
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
@@ -451,7 +453,7 @@ btnClose.addEventListener('click', function (e) {
 let sortState = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
-  
+
   displayTransactions(currentAccount.movements, !sortState);
   sortState = !sortState;
 });
