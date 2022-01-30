@@ -45,10 +45,23 @@ const account2 = {
 };
 
 const account3 = {
-  owner: 'Pelumi James',
+  owner: 'Jang yeong sil',
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 3333,
+
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2020-07-26T12:01:20.894Z',
+  ],
+  currency: 'EUR',
+  locale: 'pt-PT',
 };
 
 const account4 = {
@@ -136,7 +149,6 @@ const displayTransactions = function (acc, sort = false) {
         Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
 
       const daysPassed = calcDaysPassed(new Date(), date);
-      console.log(daysPassed);
 
       if (daysPassed === 0) return 'Today';
       if (daysPassed === 1) return 'Yesterday';
@@ -253,6 +265,7 @@ const startLogoutTimer = function () {
       labelWelcome.textContent = `Login to get started`;
       containerApp.style.opacity = 0;
       document.querySelector('.swal-modal').style.visibility = 'hidden'; // hide sweet alert
+
       location.reload();
     }
 
@@ -337,6 +350,10 @@ btnLogin.addEventListener('click', function (e) {
 
     // updating the UI with the current account transaction values
     updateUI(currentAccount);
+  } else if (!currentAccount) {
+    swal('Login error', `Account does not exist`, 'error');
+  } else if (currentAccount || inputLoginPin.value !== currentAccount.pin) {
+    swal('Login error', `Incorrect password`, 'error');
   }
 });
 
@@ -345,15 +362,6 @@ btnTransfer.addEventListener('click', function (e) {
 
   const transferAmount = parseInt(inputTransferAmount.value);
   const receiver = accounts.find(acc => acc.username === inputTransferTo.value);
-
-  // formatCurrency(
-  //   transferAmount,
-  //   currentAccount.locale,
-  //   currentAccount.currency
-  // );
-
-  console.log(transferAmount);
-  console.log(receiver);
 
   inputTransferAmount.value = '';
   inputTransferTo.value = '';
@@ -365,12 +373,6 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.username !== receiver?.username
   ) {
     // confirm for transfer to another account
-
-    // confirm(
-    //   `${
-    //     currentAccount.owner.split(' ')[0]
-    //   }, do you confirm this transfer to ${receiver.owner.split(' ')[0]}?`
-    // )
 
     swal({
       title: `Hi ${currentAccount.owner.split(' ')[0]}`,
@@ -473,6 +475,10 @@ btnLoan.addEventListener('click', function (e) {
   } else if (!amount) {
     // alert(`Enter loan amount to proceed`);
     swal('Error!', 'Enter loan amount to proceed', 'error');
+
+    // reset the timer
+    clearInterval(timer);
+    timer = startLogoutTimer();
   }
 });
 
@@ -483,18 +489,36 @@ btnClose.addEventListener('click', function (e) {
     currentAccount?.username === inputCloseUsername.value &&
     currentAccount?.pin === Number(inputClosePin.value)
   ) {
-    if (confirm(`Are you sure to close this account?`)) {
-      const index = accounts.findIndex(
-        acc => acc.username === currentAccount.username
-      );
-      console.log(index);
-      accounts.splice(index, 1);
+    swal({
+      title: `Hello ${currentAccount.owner.split(' ')[0]}`,
+      text: `Are you sure to close this account?`,
+      icon: 'warning',
+      buttons: true,
+      dangerMode: true,
+    }).then(willDelete => {
+      if (willDelete) {
+        // closing the account
+        const index = accounts.findIndex(
+          acc => acc.username === currentAccount.username
+        );
+        accounts.splice(index, 1);
 
-      containerApp.style.opacity = 0;
-      labelWelcome.textContent = `Login to get started`;
-    }
+        // reset the timer
+        clearInterval(timer);
+        timer = startLogoutTimer();
+
+        containerApp.style.opacity = 0;
+        labelWelcome.textContent = `Login to get started`;
+
+        // location.reload();
+      }
+    });
   } else if (inputCloseUsername.value !== currentAccount.username) {
-    alert(`Account dosen't exist`);
+    swal('oops!', `Account dosen't exist`, 'error');
+
+    // reset the timer
+    clearInterval(timer);
+    timer = startLogoutTimer();
   }
 });
 
@@ -508,4 +532,3 @@ btnSort.addEventListener('click', function (e) {
 
 // ADDITIONAL APP FEATURES
 // adding trasition effect 5seconds on app page load to container app opacity
-// format transfer amount and loan amount to have comma seperators
