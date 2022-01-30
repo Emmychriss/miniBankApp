@@ -455,6 +455,16 @@ btnLoan.addEventListener('click', function (e) {
       updateUI(currentAccount);
 
       inputLoanAmount.value = '';
+
+      swal(
+        'Credited!',
+        `Your account is now credited with ${formatCurrency(
+          amount,
+          currentAccount.locale,
+          currentAccount.currency
+        )} loan!`,
+        'success'
+      );
     }, 3000);
 
     // reset the timer
