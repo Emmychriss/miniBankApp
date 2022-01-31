@@ -519,6 +519,11 @@ btnClose.addEventListener('click', function (e) {
     // reset the timer
     clearInterval(timer);
     timer = startLogoutTimer();
+  } else if (
+    inputCloseUsername.value == currentAccount.username &&
+    inputClosePin.value !== currentAccount.pin
+  ) {
+    swal('oops!', `Incorrect pin`, 'error');
   }
 });
 
@@ -532,3 +537,4 @@ btnSort.addEventListener('click', function (e) {
 
 // ADDITIONAL APP FEATURES
 // adding trasition effect 5seconds on app page load to container app opacity
+// fix sorting
