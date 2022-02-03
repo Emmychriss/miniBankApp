@@ -106,6 +106,9 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+const loginModal = document.querySelector('.modal');
+const showLoginForm = document.querySelector('.showLoginModal');
+
 // Displays
 const createUserInitials = function (accts) {
   accts.forEach(function (acc) {
@@ -306,6 +309,7 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 1;
+    loginModal.classList.add('hidden');
 
     // current date and time display
     const today = new Date();
@@ -509,8 +513,9 @@ btnClose.addEventListener('click', function (e) {
 
         containerApp.style.opacity = 0;
         labelWelcome.textContent = `Login to get started`;
+        // loginModal.classList.remove('hidden');
 
-        // location.reload();
+        location.reload();
       }
     });
   } else if (inputCloseUsername.value !== currentAccount.username) {
