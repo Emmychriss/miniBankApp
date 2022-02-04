@@ -53,12 +53,12 @@ const account3 = {
   movementsDates: [
     '2019-11-01T13:15:33.035Z',
     '2019-11-30T09:48:16.867Z',
-    '2019-12-25T06:04:23.907Z',
+    '2020-12-25T06:04:23.907Z',
     '2020-01-25T14:18:46.235Z',
-    '2020-02-05T16:33:06.386Z',
-    '2020-04-10T14:43:26.374Z',
-    '2020-06-25T18:49:59.371Z',
-    '2020-07-26T12:01:20.894Z',
+    '2021-02-05T16:23:06.386Z',
+    '2021-04-10T14:43:26.374Z',
+    '2022-06-25T18:42:59.371Z',
+    '2022-07-21T12:04:20.894Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT',
@@ -107,7 +107,7 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 const loginModal = document.querySelector('.modal');
-const showLoginForm = document.querySelector('.showLoginModal');
+const showLoginModalBtn = document.querySelector('.showLoginModal');
 
 // Displays
 const createUserInitials = function (accts) {
@@ -267,7 +267,7 @@ const startLogoutTimer = function () {
       clearInterval(timer);
       labelWelcome.textContent = `Login to get started`;
       containerApp.style.opacity = 0;
-      document.querySelector('.swal-modal').style.visibility = 'hidden'; // hide sweet alert
+      document.querySelector('.swal-modal').classList.add('hidden'); // hide sweet alert
 
       location.reload();
     }
@@ -297,7 +297,7 @@ btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
 
   currentAccount = accounts.find(
-    acct => acct.username === inputLoginUsername.value // find account object that match user input
+    acct => acct.username === inputLoginUsername.value
   );
   console.log(currentAccount);
 
@@ -357,7 +357,7 @@ btnLogin.addEventListener('click', function (e) {
   } else if (!currentAccount) {
     swal('Login error', `Account does not exist`, 'error');
   } else if (currentAccount || inputLoginPin.value !== currentAccount.pin) {
-    swal('Login error', `Incorrect password`, 'error');
+    swal('Login error', `Incorrect PIN`, 'error');
   }
 });
 
@@ -418,21 +418,18 @@ btnTransfer.addEventListener('click', function (e) {
       }
     });
   } else if (transferAmount > currentAccount.balance) {
-    // alert(`Cannot transfer funds more than your account balance`);
     swal('Error!', 'Cannot transfer funds more than A/C balance', 'error');
 
     // reset the timer
     clearInterval(timer);
     timer = startLogoutTimer();
   } else if (transferAmount < 0) {
-    // alert(`Cannot transfer funds less than 0`);
     swal('Error!', 'Cannot transfer funds less than 0', 'error');
 
     // reset the timer
     clearInterval(timer);
     timer = startLogoutTimer();
   } else if (!receiver) {
-    // alert(`Cannot place transfer. Enter a valid user with transfer amount`);
     swal(
       'Error!',
       'Cannot place transfer. Enter a valid user with transfer amount',
