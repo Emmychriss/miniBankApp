@@ -141,6 +141,12 @@ nav {
   transition: all 0.3s;
 }
 
+.login__btn:hover{
+  opacity: 0.9;
+  outline: none;
+  font-size: 1.65rem;
+}
+
 /* MAIN */
 .app {
   position: relative;
