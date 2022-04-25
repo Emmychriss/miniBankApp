@@ -41,6 +41,7 @@ nav {
 .welcome {
   font-size: 1.9rem;
   font-weight: 500;
+  color: whitesmoke;
 }
 
 .logo {
@@ -181,16 +182,18 @@ nav {
   font-size: 2.2rem;
   font-weight: 500;
   margin-bottom: -0.2rem;
+  color: whitesmoke;
 }
 
 .balance__date {
   font-size: 1.4rem;
-  color: #888;
+  color: whitesmoke;
 }
 
 .balance__value {
   font-size: 4.5rem;
   font-weight: 400;
+  color: whitesmoke;
 }
 
 /* MOVEMENTS */
@@ -245,6 +248,7 @@ nav {
   align-items: baseline;
   padding: 0 0.3rem;
   margin-top: 1rem;
+  background-color: rgba(221, 221, 221, 0.808);
 }
 
 .summary__label {
@@ -360,7 +364,8 @@ h2 {
   padding: 0 0.3rem;
   margin-top: 1.9rem;
   text-align: right;
-  font-size: 1.25rem;
+  font-size: 1.65rem;
+  color: whitesmoke;
 }
 
 .timer {
