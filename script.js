@@ -61,7 +61,7 @@ const account3 = {
     '2022-07-21T12:04:20.894Z',
   ],
   currency: 'EUR',
-  locale: 'pt-PT',
+  locale: 'en-US',
 };
 
 const account4 = {
@@ -78,7 +78,27 @@ const account5 = {
   pin: 5555,
 };
 
-const accounts = [account1, account2, account3, account4, account5];
+const account6 = {
+  owner: "Ibrahim Oye",
+  movements: [1000, 5000, 577, 888, 999, 100000],
+  interestRate: 2,
+  pin: 6666,
+
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2020-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2021-02-05T16:23:06.386Z',
+    '2021-04-10T14:43:26.374Z',
+    '2022-06-25T18:42:59.371Z',
+    '2022-07-21T12:04:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
+}
+
+const accounts = [account1, account2, account3, account4, account5, account6];
 
 // Elements
 const labelWelcome = document.querySelector('.welcome');
