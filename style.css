@@ -409,6 +409,7 @@ h2 {
 
   .app {
     position: relative;
+    top: 15%;
     max-width: 100rem;
     margin: 4rem auto;
     /* display: grid; */
@@ -424,11 +425,18 @@ h2 {
   .summary {
     grid-row: 5 / 6;
     display: flex;
-    flex-flow: column;
+    justify-content: space-between;
     align-items: baseline;
     padding: 0 0.3rem;
     margin-top: 1rem;
     background-color: rgba(221, 221, 221, 0.808);
+    border-radius: 8px;
+  }
+
+  .summary__label,
+  .summary__value {
+    font-size: 1.5rem;
+    margin-left: 1rem;
   }
 }
 
