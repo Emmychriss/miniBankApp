@@ -16,52 +16,39 @@
   </head>
   <body>
     <!-- TOP NAVIGATION -->
-    <nav>
-      <p class="welcome">Log in to get started</p>
-      <img src="logo.png" alt="Logo" class="logo" />
 
-      <!-- <form class="login">
-        <input
-          type="text"
-          placeholder="user"
-          class="login__input login__input--user"
-        />
+    <header class="Toolbar">
+      <div><p class="welcome">Log in to get started</p></div>
+      <div class="logoDiv">
+        <img src="logo.png" alt="Logo" class="logo" />
+      </div>
+      <nav>
+        <div class="contactUs">
+          <p>contact us</p>
+        </div>
+      </nav>
+    </header>
 
+    <div class="modal">
+      <h2 class="modal__header">
+        Swift
+        <span class="highlight">login</span> to account
+      </h2>
+      <form class="modal__form">
+        <label>Username</label>
+        <input type="text" placeholder="Username" class="login__input--user" />
+        <label>Password</label>
         <input
           type="password"
-          placeholder="PIN"
+          placeholder="password"
           maxlength="4"
-          class="login__input login__input--pin"
+          class="login__input--pin"
         />
-        <button class="login__btn">&rarr;</button>
-      </form> -->
-
-      <!-- addiing input login form type -->
-      <div class="modal">
-        <h2 class="modal__header">
-          Swift
-          <span class="highlight">login</span> to account
-        </h2>
-        <form class="modal__form">
-          <label>Username</label>
-          <input
-            type="text"
-            placeholder="Username"
-            class="login__input--user"
-          />
-          <label>Password</label>
-          <input
-            type="password"
-            placeholder="password"
-            maxlength="4"
-            class="login__input--pin"
-          />
-          <label>Email Address</label>
-          <input type="email" placeholder="email@gmail.com" />
-          <button class="login__btn">Proceed to Login &rarr;</button>
-        </form>
-      </div>
-    </nav>
+        <label>Email Address</label>
+        <input type="email" placeholder="email@gmail.com" />
+        <button class="login__btn">Proceed to Login &rarr;</button>
+      </form>
+    </div>
 
     <main class="app">
       <!-- BALANCE -->
